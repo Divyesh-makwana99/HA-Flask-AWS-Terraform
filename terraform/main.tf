@@ -31,7 +31,7 @@ resource "aws_route_table" "route_table" {
 }
 
 resource "aws_route_table_association" "route_table_association" {
-    subnet_id = [aws_subnet.public_subnet.id, aws_subnet.public_subnet2.id  ]
+    subnet_id = aws_subnet.public_subnet.id
     route_table_id = aws_route_table.route_table.id
 }
 
@@ -94,17 +94,17 @@ resource "aws_lb_target_group" "alb_target_group" {
     vpc_id = aws_vpc.project_vpc.id
 }
 
-resource "aws_lb_target_group_attachment" "alb_tg_attach" {
+# resource "aws_lb_target_group_attachment" "alb_tg_attach" {
     
-    for_each = {
-      for i, ec2 in aws_instance.instances1 : "ec2-${i}" => ec2.id
-    }
+#     # for_each = {
+#     #   for i, ec2 in aws_instance.instances1 : "ec2-${i}" => ec2.id
+#     # }
     
-    target_group_arn = aws_lb_target_group.alb_target_group.arn
-    port = 5678
-    target_id = each.value
+#     target_group_arn = aws_lb_target_group.alb_target_group.arn
+#     port = 5678
+#     target_id = aws_lb_target_group.alb_target_group.id
   
-}
+# }
 
 resource "aws_lb_listener" "listener" {
     load_balancer_arn = aws_lb.load_balancer.arn
@@ -135,32 +135,96 @@ output "my_private_key" {
   
 }
 
+resource "aws_autoscaling_group" "auto_scaling" {
+    name = "autoscaling_demo"
+    min_size = 1
+    max_size = 5
+    desired_capacity = 2
+    health_check_type = "ELB"
+    health_check_grace_period = "400"
+    target_group_arns = [aws_lb_target_group.alb_target_group.arn]
 
-resource "aws_instance" "instances1" {
-    ami = "ami-0af9569868786b23a"
-    instance_type = "t2.micro"
-    associate_public_ip_address = true
-    count = 2
-    subnet_id = aws_subnet.public_subnet.id
-    vpc_security_group_ids = [ aws_security_group.security_group.id ]
-    key_name = aws_key_pair.key_pair.key_name
 
+    vpc_zone_identifier = [
 
-    user_data = <<-EOF
-            #!/bin/bash
-            yum update -y
-            yum install -y git python3 python3-pip
-            git clone https://github.com/divyesh-test/Project.git
-            chown -R ec2-user:ec2-user /home/ec2-user/Project
-            cd /home/ec2-user/Project
-            cd ./app/
-            pip3 install -r requirements.txt
-            FLASK_APP=app.py nohup python3 app.py > output.log 2>&1 &
-            EOF
+        aws_subnet.public_subnet.id,
+        aws_subnet.public_subnet2.id 
+    ]
 
-}
+    launch_template {
+      id = aws_launch_template.launch_template_custom.id
 
-output "public_ipv4_address" {
-    value = [for instance in aws_instance.instances1 : instance.public_ip]
+    }
   
 }
+
+
+data "aws_ami" "amazon_linux" {
+    most_recent = true
+    owners = ["amazon"]
+    
+    filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+    }
+
+    filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+    }
+  
+}
+
+resource "aws_launch_template" "launch_template_custom" {
+    name = "launch_template_demo"
+    key_name = aws_key_pair.key_pair.id
+    instance_type = "t2.micro"
+
+
+    network_interfaces {
+      associate_public_ip_address = true
+      security_groups = [aws_security_group.security_group.id]
+    }
+    
+    vpc_security_group_ids = [aws_security_group.security_group.id]
+    tag_specifications {
+      resource_type = "instance"
+
+      tags = {
+        Name = "Demo_ASG"
+      }
+    }
+  
+}
+
+
+
+# resource "aws_instance" "instances1" {
+#     ami = "ami-0af9569868786b23a"
+#     instance_type = "t2.micro"
+#     associate_public_ip_address = true
+#     count = 2
+#     subnet_id = aws_subnet.public_subnet.id
+#     vpc_security_group_ids = [ aws_security_group.security_group.id ]
+#     key_name = aws_key_pair.key_pair.key_name
+
+
+#     user_data = <<-EOF
+#             #!/bin/bash
+#             cd /home/ec2-user
+#             yum update -y
+#             yum install -y git python3 python3-pip
+#             git clone https://github.com/divyesh-test/Project.git
+#             chown -R ec2-user:ec2-user /home/ec2-user/Project
+#             cd /home/ec2-user/Project
+#             cd ./app/
+#             pip3 install -r requirements.txt
+#             FLASK_APP=app.py nohup python3 app.py > output.log 2>&1 &
+#             EOF
+
+# }
+
+# output "public_ipv4_address" {
+#     value = [for instance in aws_instance.instances1 : instance.public_ip]
+  
+# }
