@@ -2,6 +2,10 @@ provider "aws" {
   region = "ap-south-1"
 }
 
+provider "local" {
+  
+}
+
 resource "aws_vpc" "project_vpc" {
     cidr_block = "10.0.0.0/16"
   
@@ -192,7 +196,18 @@ resource "aws_launch_template" "launch_template_custom" {
     
     vpc_security_group_ids = [aws_security_group.security_group.id]
     
-    
+    user_data = <<-EOF
+            #!/bin/bash
+            cd /home/ec2-user
+            yum update -y
+            yum install -y git python3 python3-pip
+            git clone https://github.com/divyesh-test/Project.git
+            chown -R ec2-user:ec2-user /home/ec2-user/Project
+            cd /home/ec2-user/Project
+            cd ./app/
+            pip3 install -r requirements.txt
+            FLASK_APP=app.py nohup python3 app.py > output.log 2>&1 &
+            EOF
     
     
     tag_specifications {
@@ -256,5 +271,12 @@ resource "aws_key_pair" "key_pair" {
 output "my_private_key" {
     value = tls_private_key.private_key.private_key_pem
     sensitive = true
+  
+}
+
+resource "local_file" "ssh_key" {
+    content = tls_private_key.private_key.private_key_pem
+    filename = "${path.module}/mine.pem"
+    file_permission = "0600"
   
 }
