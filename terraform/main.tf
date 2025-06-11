@@ -39,6 +39,12 @@ resource "aws_route_table_association" "route_table_association" {
     route_table_id = aws_route_table.route_table.id
 }
 
+resource "aws_route_table_association" "route_table_association2" {
+    subnet_id = aws_subnet.public_subnet2.id
+    route_table_id = aws_route_table.route_table.id
+  
+}
+
 resource "aws_internet_gateway" "internet_gateway" {
     vpc_id = aws_vpc.project_vpc.id   
 
@@ -79,24 +85,6 @@ resource "aws_vpc_security_group_egress_rule" "security_group_egress1" {
     cidr_ipv4 = "0.0.0.0/0"
   
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 resource "aws_lb" "load_balancer" {
@@ -188,15 +176,15 @@ resource "aws_launch_template" "launch_template_custom" {
     instance_type = "t2.micro"
     image_id = data.aws_ami.amazon_linux.id
 
-    # network_interfaces {
-    #   #device_index = 0
-    #   associate_public_ip_address = true
-    #   #security_groups = [aws_security_group.security_group.id]
-    # }
+    network_interfaces {
+      #device_index = 0
+      associate_public_ip_address = true
+      security_groups = [aws_security_group.security_group.id]
+    }
     
-    vpc_security_group_ids = [aws_security_group.security_group.id]
+    #vpc_security_group_ids = [aws_security_group.security_group.id]
     
-    user_data = <<-EOF
+    user_data = base64encode(<<-EOF
             #!/bin/bash
             cd /home/ec2-user
             yum update -y
@@ -208,6 +196,8 @@ resource "aws_launch_template" "launch_template_custom" {
             pip3 install -r requirements.txt
             FLASK_APP=app.py nohup python3 app.py > output.log 2>&1 &
             EOF
+
+    )
     
     
     tag_specifications {
@@ -278,5 +268,11 @@ resource "local_file" "ssh_key" {
     content = tls_private_key.private_key.private_key_pem
     filename = "${path.module}/mine.pem"
     file_permission = "0600"
+  
+}
+
+
+output "ipaddress" {
+    value = aws_lb.load_balancer.dns_name
   
 }
