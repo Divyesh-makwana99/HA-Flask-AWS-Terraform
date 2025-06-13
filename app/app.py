@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect
 import sqlite3
-import os
+import os, requests
 print("Current working directory:", os.getcwd())
 DB_FILE = os.path.join(os.path.dirname(__file__), 'users.db')
 
@@ -51,6 +51,11 @@ def list_users():
     users = cursor.fetchall()
     conn.close()
     return render_template('users.html',users=users)
+
+@app.route('/ip')
+def ip():
+    response = requests.get('http://169.254.169.254/latest/meta-data/local-ipv4')
+    return f"IP is {response.text}"
 
 if __name__ == '__main__':
     init_db()
