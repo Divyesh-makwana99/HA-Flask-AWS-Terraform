@@ -15,11 +15,9 @@ More updates and documentation will be added soon.
 
 ## NOTES
 
-- Depending on instance availability in a AVAILABILITY ZONES terraform script may fail to run so change the availability zone to the one's available 
-  in subnet.
+- Depending on instance availability in a AVAILABILITY ZONES terraform script may fail to run so change the availability zone to the one's available in subnet.
 - Sometimes specific type of instances are not available so script may fail. Try changing instance type and try again
-- This project makes use of AWS free tier and is safe to implement but AWS charges for PUBLIC ipv4 address in use so keep that in mind if you are   
-  going to use this for longer period of time.
+- This project makes use of AWS free tier and is safe to implement but AWS charges for PUBLIC ipv4 address in use so keep that in mind if you are going to use this for longer period of time.
 
 ## Instructions 
 
@@ -30,7 +28,7 @@ More updates and documentation will be added soon.
 - run terraform plan
 - run terraform apply
 - now if everything is in place and instance type and availabilty zones are avialble script will output public ipv4 address.
-- in your browser go to -- http://public-ipv4-address:5678
+- in your browser go to -- http://public-ipv4-address
 - you can see form asking for your details. that's it app is now running.
 - now for cleaning setup :
 - run terraform destroy - give yes in prompt
