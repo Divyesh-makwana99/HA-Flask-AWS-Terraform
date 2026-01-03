@@ -33,7 +33,7 @@ The goal of this project is to demonstrate **real-world DevOps and cloud archite
 > _(Replace this path once the image is added to the repo)_
 
 
----
+```text
 ├── app/ # Flask application code
 │ ├── run.py
 │ └── requirements.txt
@@ -45,7 +45,7 @@ The goal of this project is to demonstrate **real-world DevOps and cloud archite
 │ └── modules/
 │
 └── README.md
----
+```
 
 
 ---
@@ -95,17 +95,21 @@ All resources can be created or destroyed using Terraform commands.
 ```bash
 git clone https://github.com/Divyesh-makwana99/HA-Flask-AWS-Terraform.git
 cd HA-Flask-AWS-Terraform/terraform
-
-
+```
 ### Initialize Terraform
+``` bash
 terraform init
+```
 
 ### Review the Plan
+```bash
 terraform plan
+```
 
 ### Deploy Infrastructure
+```bash
 terraform apply
-
+```
 Type yes when prompted.
 
 ###  Access the Application
@@ -114,9 +118,9 @@ After deployment, Terraform outputs the ALB DNS name.
 
 http://<ALB_DNS_NAME>
 
-```
 
-###🔐 Security Design
+
+### Security Design
 
 ALB Security Group:
 
@@ -141,7 +145,7 @@ Auto Scaling Group replaces failed instances automatically
 ### 🧹 Cleanup
 
 To destroy all AWS resources:
-
+```bash
 terraform destroy
-
+```
 
