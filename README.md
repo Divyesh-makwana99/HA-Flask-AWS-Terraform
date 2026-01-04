@@ -30,21 +30,29 @@ The goal of this project is to demonstrate **real-world DevOps and cloud archite
 
 ## 📊 Architecture Diagram
 
-> _(Replace this path once the image is added to the repo)_
+![Architecture Diagram](HA-Flask.drawio.svg)
 
 
-```text
-├── app/ # Flask application code
-│ ├── run.py
-│ └── requirements.txt
+---
+## Repository Structure
+
+```text.
+├── app/                         # Flask application source code
+│   ├── templates/
+│   │   ├── form.html
+│   │   └── users.html
+│   ├── app.py                   # Flask application entry point
+│   ├── requirements.txt         # Python dependencies
+│   ├── test.db                  # SQLite test database
+│   └── users.db                 # SQLite user database
 │
-├── terraform/ # Terraform infrastructure code
-│ ├── main.tf
-│ ├── variables.tf
-│ ├── outputs.tf
-│ └── modules/
+├── terraform/                   # Terraform infrastructure code
+│   ├── main.tf
+│   └── .terraform.lock.hcl
 │
+├── HA-Flask.drawio.svg           # Architecture diagram (SVG)
 └── README.md
+
 ```
 
 
