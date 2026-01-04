@@ -5,7 +5,7 @@ This project demonstrates production-style cloud architecture with load balancin
 
 ---
 
-## 📌 Project Overview
+##  Project Overview
 
 This repository showcases how to deploy a **Flask application** on AWS with:
 
@@ -58,7 +58,7 @@ The goal of this project is to demonstrate **real-world DevOps and cloud archite
 
 ---
 
-## ⚙️ AWS Components Used
+##  AWS Components Used
 
 | Service | Purpose |
 |------|--------|
@@ -86,7 +86,7 @@ All resources can be created or destroyed using Terraform commands.
 
 ---
 
-## 🚀 Deployment Steps
+##  Deployment Steps
 
 ###  Prerequisites
 
@@ -127,7 +127,7 @@ http://<ALB_DNS_NAME>
 ```
 ---
 
-### 📈 High Availability & Scaling
+###  High Availability & Scaling
 
 Multiple EC2 instances across Availability Zones
 
@@ -136,7 +136,7 @@ ALB health checks ensure traffic reaches only healthy instances
 Auto Scaling Group replaces failed instances automatically
 
 ---
-### 🧹 Cleanup
+###  Cleanup
 
 To destroy all AWS resources:
 ```bash
