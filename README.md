@@ -64,8 +64,6 @@ The goal of this project is to demonstrate **real-world DevOps and cloud archite
 |------|--------|
 | **VPC** | Isolated network for the application |
 | **Public Subnets** | Host Application Load Balancer |
-| **Private Subnets** | Host EC2 instances |
-| **Internet Gateway** | Allows internet access |
 | **Application Load Balancer** | Distributes incoming traffic |
 | **Target Group** | Routes traffic to healthy EC2 instances |
 | **Auto Scaling Group** | Ensures availability & scalability |
@@ -124,23 +122,10 @@ Type yes when prompted.
 
 After deployment, Terraform outputs the ALB DNS name.
 
+```bash
 http://<ALB_DNS_NAME>
-
-
-
-### Security Design
-
-ALB Security Group:
-
-Allows inbound HTTP traffic from the internet
-
-EC2 Security Group:
-
-Allows traffic only from ALB
-
-EC2 instances are not publicly accessible
-
-Network isolation using public and private subnets
+```
+---
 
 ### 📈 High Availability & Scaling
 
@@ -150,6 +135,7 @@ ALB health checks ensure traffic reaches only healthy instances
 
 Auto Scaling Group replaces failed instances automatically
 
+---
 ### 🧹 Cleanup
 
 To destroy all AWS resources:
