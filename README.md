@@ -127,7 +127,7 @@ http://<ALB_DNS_NAME>
 ```
 ---
 
-###  High Availability & Scaling
+##  High Availability & Scaling
 
 Multiple EC2 instances across Availability Zones
 
@@ -136,7 +136,7 @@ ALB health checks ensure traffic reaches only healthy instances
 Auto Scaling Group replaces failed instances automatically
 
 ---
-###  Cleanup
+## Cleanup
 
 To destroy all AWS resources:
 ```bash
